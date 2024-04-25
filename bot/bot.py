@@ -56,4 +56,10 @@ def echo_all(message):
 
 # Start the bot
 def startBot():
-    bot.polling()
+    while True:
+        try:
+            bot.polling(none_stop=True)
+
+        except Exception as e:
+            print(e) 
+            time.sleep(15)
