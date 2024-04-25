@@ -1,9 +1,12 @@
 from langchain.schema import SystemMessage
 from langchain.chat_models.gigachat import GigaChat
+from config import chat_token
+from gigaChat import promts
+from langchain.prompts import load_prompt
 
 # Авторизация в сервисе GigaChat
 def Auth():
-    chat = GigaChat(credentials='YzcwMGMzZTEtMjY1ZS00MmZkLTliYWQtZjZmOTFmODY1ODEwOmQ5ODg4OWY0LWY3M2EtNDQ4Yy04YjAxLTNhZDUxMjMxNjdiMg==', verify_ssl_certs=False)
+    chat = GigaChat(credentials=chat_token, verify_ssl_certs=False)
     return chat
 
 def mainPromt():
@@ -14,3 +17,12 @@ def mainPromt():
     ]
     return messages
 
+def classPromt(chat, messege):
+    prompt = load_prompt('promts.yaml')
+    chain = prompt | chat
+    promt_category = chain.invoke(
+        {
+            "text": messege
+        }
+    ).content
+    return promt_category

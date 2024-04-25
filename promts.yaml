@@ -1,0 +1,11 @@
+input_variables: [text]
+messages:
+  - role: system
+    prompt:
+      template: 'Классифицируй обращения пользователя в подходящую категорию. Категории: юридическая помощь, адвакатская помощь, помощь с документами, другие. В ответе укажи только категорию'
+  - role: user
+    prompt:
+      template: '{text}'
+template_format: f-string
+_type: chat
+
