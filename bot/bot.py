@@ -1,25 +1,21 @@
 import telebot
 from telebot import types
-from langchain.schema import HumanMessage, SystemMessage
-from langchain.chat_models.gigachat import GigaChat
+from gigaChat import methods
+from config import tg_token
+from langchain.schema import HumanMessage
 
-# Авторизация в сервисе GigaChat
-chat = GigaChat(credentials='YzcwMGMzZTEtMjY1ZS00MmZkLTliYWQtZjZmOTFmODY1ODEwOmQ5ODg4OWY0LWY3M2EtNDQ4Yy04YjAxLTNhZDUxMjMxNjdiMg==')
+chat = methods.Auth()
 
-messages = [
-    SystemMessage(
-        content="Ты высоковалифицированный бот-юрист, который помогает пользователю решить его проблемы связанные с законодаьельством РФ."
-    )
-]
+messages = methods.mainPromt()
 
 # Initialize the bot
-bot = telebot.TeleBot('7019952787:AAFryO24ON1r-6pfrxHTVfl9pKTrmXQBs3w')
+bot = telebot.TeleBot(tg_token)
 
 # Create keyboard
 keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-button_start = types.KeyboardButton('Старт')
-button_restart = types.KeyboardButton('Перестарт')
-button_end = types.KeyboardButton('Ценок')
+button_start = types.KeyboardButton('Начать общение')
+button_restart = types.KeyboardButton('Прервать беседу')
+button_end = types.KeyboardButton('Закончить')
 keyboard.add(button_start, button_restart, button_end)
 
 # Handle /start command
@@ -30,12 +26,7 @@ def send_welcome(message):
 # Handle /restart command
 @bot.message_handler(commands=['restart'])
 def restart_chat(message):
-    global messages
-    messages = [
-        SystemMessage(
-            content="Ты высоковалифицированный бот-юрист, который помогает пользователю решить его проблемы связанные с законодаьельством РФ."
-        )
-    ]
+    methods.mainPromt()
     bot.send_message(message.chat.id, "Чат перезапущен.", reply_markup=keyboard)
 
 # Handle /end command
@@ -57,4 +48,5 @@ def echo_all(message):
         bot.reply_to(message, f"Произошла ошибка: {str(e)}")
 
 # Start the bot
-bot.polling()
+def startBot():
+    bot.polling()
